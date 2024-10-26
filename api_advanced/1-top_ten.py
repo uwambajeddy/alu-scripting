@@ -1,20 +1,29 @@
 #!/usr/bin/python3
-"""Script that fetches the titles of the first 10 hot posts for a given subreddit."""
+"""Api implementation using Reddit top 10 posts"""
 import requests
+import json
+
 
 def top_ten(subreddit):
-    """Print the titles of the first 10 hot posts for a valid subreddit, or None if invalid."""
-    headers = {'User-Agent': 'MyRedditAPI/0.0.1'}
-    subreddit_url = f"https://www.reddit.com/r/{subreddit}/hot.json?limit=10"
-    response = requests.get(subreddit_url, headers=headers, allow_redirects=False)
+    """Returns the Title of top 10 hot post"""
+    # print(subreddit)
+    url = "https://www.reddit.com/r/"
+    payload = {'limit': 10}
+    headers = {"User-Agent": "0-subs-script/0.1"}
 
-    if response.status_code == 200:
-        json_data = response.json().get('data', {})
-        posts = json_data.get('children', [])
-        if posts:
-            for post in posts:
-                print(post.get('data', {}).get('title'))
+    try:
+        req = requests.get(f'{url}{subreddit}/hot.json',
+                           headers=headers, params=payload, allow_redirects=False)
+
+        if req.headers.get('Content-Type', '').startswith('application/json'):
+            try:
+                req_json = req.json()
+                posts = req_json['data']['children']
+                for post in posts[:10]:
+                    print(post['data']['title'])
+            except json.JSONDecodeError:
+                print("None")
         else:
-            print(None)
-    else:
-        print(None)
+            print("None")
+    except requests.RequestException as e:
+        print(f"Request Error: {e}")
