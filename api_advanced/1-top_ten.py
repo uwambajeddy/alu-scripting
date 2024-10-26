@@ -16,8 +16,8 @@ def top_ten(subreddit):
         json_data = response.json().get('data', {})
         posts = json_data.get('children', [])
         if len(posts) == 10:
-            print(output.strip(), end="")
+            print(output.strip())
         else:
-            print(output.strip(), end="")
+            print(output.strip())
     else:
-        print(output.strip(), end="")
+        print(output.strip())
