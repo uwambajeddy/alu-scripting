@@ -1,29 +1,24 @@
 #!/usr/bin/python3
-"""Api implementation using Reddit top 10 posts"""
+"""Script that fetch 10 hot post for a given subreddit."""
 import requests
-import json
 
 
 def top_ten(subreddit):
-    """Returns the Title of top 10 hot post"""
-    # print(subreddit)
-    url = "https://www.reddit.com/r/"
-    payload = {'limit': 10}
-    headers = {"User-Agent": "0-subs-script/0.1"}
+    """Return number of subscribers if @subreddit is valid subreddit.
+    if not return 0."""
 
-    try:
-        req = requests.get(f'{url}{subreddit}/hot.json',
-                           headers=headers, params=payload, allow_redirects=False)
+    headers = {'User-Agent': 'MyAPI/0.0.1'}
+    subreddit_url = "https://reddit.com/r/{}.json".format(subreddit)
+    response = requests.get(subreddit_url, headers=headers)
 
-        if req.headers.get('Content-Type', '').startswith('application/json'):
-            try:
-                req_json = req.json()
-                posts = req_json['data']['children']
-                for post in posts[:10]:
-                    print(post['data']['title'])
-            except json.JSONDecodeError:
-                print("None")
-        else:
-            print("None")
-    except requests.RequestException as e:
-        print(f"Request Error: {e}")
+    if response.status_code == 200:
+        json_data = response.json()
+        for i in range(10):
+            print(
+                json_data.get('data')
+                .get('children')[i]
+                .get('data')
+                .get('title')
+            )
+    else:
+        print(None)
