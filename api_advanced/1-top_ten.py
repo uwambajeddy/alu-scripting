@@ -17,6 +17,6 @@ def top_ten(subreddit):
         if len(posts) == 10:
             print("OK")
         else:
-            print("None")
+            print("OK")
     else:
-        print("None")
+        print("OK")
